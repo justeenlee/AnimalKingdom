@@ -19,7 +19,7 @@ boolean pressedInGeneral = false;
 boolean foundOpenSpot = false;
 int nextOpenIndex = 4;
 int whichButtonWasPressed = 100;
- boolean allFilled = true;
+ boolean allFilled = false;
  
 //boolean wasPressed = false;
 int buttonState = 0;
@@ -30,7 +30,6 @@ const unsigned char cat[] PROGMEM = {
 
 
 void setup() {
-
   pinMode(buttons[0], INPUT);
   pinMode(buttons[1], INPUT);
   pinMode(buttons[2], INPUT);
@@ -52,12 +51,12 @@ void recallCheck(){
     if (buttonState != wasPressed[i]) {
       if (!buttonState) {
         goOn[i] = true;
-        pressedInGeneral = true;
+        
         whichButtonWasPressed = i+1;
-        //Serial.print(whichButtonWasPressed);
-        //Serial.println(" is pressed");
+        Serial.print(whichButtonWasPressed);
+        Serial.println(" is pressed");
         //set this button to be ready to be logged into recall
-       
+        pressedInGeneral = true;
       } else {
         //Serial.print(whichButtonWasPressed);
         //Serial.println(" is released");
@@ -65,7 +64,6 @@ void recallCheck(){
         pressedInGeneral =false;
       }
     }
-    delay(50);
     wasPressed[i] = buttonState;
   }
 }
@@ -73,9 +71,9 @@ void recallCheck(){
 void getRecallCheck(boolean pressedInGeneral){
    if (pressedInGeneral){
     //getRecall();
-    test();
-    pressedInGeneral =false;
+    test(); //this is what logs the button number
   }
+  pressedInGeneral =false;
 }
 
 
@@ -89,6 +87,9 @@ void test(){
          foundOpenSpot = true;
        }
    }
+   //if there is a open spot, and whichButtonWasPressed is not 0
+   Serial.print("whichButtonWasPressed is ");
+   Serial.println(whichButtonWasPressed);
    if (foundOpenSpot){
        //log the button number to recall
        recall[nextOpenIndex] = whichButtonWasPressed;
@@ -98,30 +99,26 @@ void test(){
        Serial.println(whichButtonWasPressed);
        //playRecall(recall[nextOpenIndex]);
        //goOn[i] = false;
-       
-      
    }
-    //since logged the button number, reset nextOpenSpot and foundOpenSpot
-       nextOpenIndex = 4;
-       foundOpenSpot=false;
-       whichButtonWasPressed = 100; 
        
-  //if all in recall are not 0, then print recall
-  for (int j=0;j<4;j++){
-     if (!recall[j] || !allFilled){
-       allFilled = false;
-     }
-  }
+  //if the last element in recall is not 0, that means it's all filled, so print recall
+  if (recall[3]){allFilled = true;}
   if (allFilled){
       Serial.println("all filled");
       Serial.print("Recall is ");
       for (int j=0;j<4;j++){
         Serial.print(recall[j]);
       }
+      Serial.println("\n");
   } else {
     Serial.println("have spot");
   }
   Serial.println("=====================");
+  
+  //since logged the button number, reset nextOpenSpot and foundOpenSpot
+   nextOpenIndex = 4;
+   foundOpenSpot=false;
+   whichButtonWasPressed = 0; 
 
 }
 
