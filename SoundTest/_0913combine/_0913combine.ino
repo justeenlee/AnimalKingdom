@@ -80,8 +80,12 @@ void getPattern(){
     int j = random(1,5);
     pattern[i] = j;
     if (i!=3){
-      playPattern(pattern[i]);
-      delay(600);
+      if (pattern[i]!=1){
+        playPattern(pattern[i]);
+        delay(600);
+      } else {
+        playPattern(pattern[i]);
+      }
     } else {
       playPattern(pattern[i]);
     }

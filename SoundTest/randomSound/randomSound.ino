@@ -8,7 +8,7 @@
 
 #include <PCM.h>
 
-#define BUTTON_5 7
+#define BUTTON_5 2
 #define SPEAKER 11
 
 boolean wasPressed = false;
@@ -39,20 +39,20 @@ void setup() {
 
 void loop() {
   int pastTime1 = millis();
-  buttonCheck();
+  patternCheck();
   int newTime1 = millis();
   Serial.print("buttonCheck() ran ");
   Serial.println(newTime1-pastTime1);
   
   int pastTime2 = millis();
-  lightCheck(goOn);
+  getPatternCheck(goOn);
   int newTime2 = millis();
   Serial.print("lightCheck() ran ");
   Serial.println(newTime2-pastTime2);
 }
 
 
-void buttonCheck(){
+void patternCheck(){
   buttonState = digitalRead(BUTTON_5);
   if (buttonState != wasPressed) {
     if (!buttonState) {
@@ -66,7 +66,7 @@ void buttonCheck(){
   wasPressed = buttonState;
 }
 
-void lightCheck(boolean goOn){
+void getPatternCheck(boolean goOn){
   if (goOn){
     getPattern();
   }
@@ -77,14 +77,18 @@ void getPattern(){
   for (int i = 0; i<4; i++){
     int j = random(1,5);
     pattern[i] = j;
-    if (i!=3){
-      playPattern(pattern[i]);
-      delay(600);
+   if (i!=3){
+      if (pattern[i]!=1){
+        playPattern(pattern[i]);
+        delay(600);
+      } else {
+        playPattern(pattern[i]);
+      }
     } else {
       playPattern(pattern[i]);
     }
   }
-    Serial.print("\n");
+  Serial.print("\n");
 }
 
 
