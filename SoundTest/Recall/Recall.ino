@@ -135,19 +135,19 @@ void playRecall(int i){
     Serial.println(i);
     analogWrite(leds[i-1], 1024);
     startPlayback(cat, sizeof(cat));
-    delay(600);
+    //delay(600);
     analogWrite(leds[i-1],0);
   } else if (i==3){
     Serial.println(i);
     analogWrite(leds[i-1], 1024);
     startPlayback(goat, sizeof(goat));
-    delay(600);
+    //delay(600);
     analogWrite(leds[i-1],0);
   } else if (i==4){
     Serial.println(i);
     analogWrite(leds[i-1], 1024);
     startPlayback(cow, sizeof(cow));
-    delay(600);
+    //delay(600);
     analogWrite(leds[i-1],0);
   } else {
     Serial.print("nothing");
