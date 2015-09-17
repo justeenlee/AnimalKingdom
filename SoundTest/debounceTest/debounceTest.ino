@@ -10,8 +10,11 @@
 
 #include <PCM.h>
 
+#define SPEAKER 11
+
 int buttons[] = {4,5,6,7};
 int LED_2 = A0;
+int leds[] = {A0,A1,A2,A3};
 boolean goOn[4] = {false,false,false,false};
 boolean wasPressed[4] = {false,false,false,false};
 int recall[] = {0,0,0,0};
@@ -76,7 +79,8 @@ void getRecallCheck(boolean pressedInGeneral){
   pressedInGeneral =false;
 }
 
-
+//get which button is pressed and store in the next open spot in recall
+//ie. when you press on button 3, the serial should only print button 3 was pressed, others were not
 void test(){
   //Serial.print("recall is ");
   Serial.println("=====================");
@@ -93,11 +97,11 @@ void test(){
    if (foundOpenSpot){
        //log the button number to recall
        recall[nextOpenIndex] = whichButtonWasPressed;
-       Serial.print("open spot is ");
+       Serial.print("open index is ");
        Serial.println(nextOpenIndex);
-       Serial.print("log button number ");
-       Serial.println(whichButtonWasPressed);
-       //playRecall(recall[nextOpenIndex]);
+       //Serial.println(whichButtonWasPressed);
+       playRecall(recall[nextOpenIndex]);
+       delay(600);
        //goOn[i] = false;
    }
        
@@ -114,66 +118,95 @@ void test(){
     Serial.println("have spot");
   }
   Serial.println("=====================");
-  
   //since logged the button number, reset nextOpenSpot and foundOpenSpot
    nextOpenIndex = 4;
    foundOpenSpot=false;
-   whichButtonWasPressed = 0; 
-
+   whichButtonWasPressed = 0;
 }
 
 
-
-
-//get which button is pressed and store in the next open spot in recall
-//ie. when you press on button 3, the serial should only print button 3 was pressed, others were not
-void getRecall(){
-  Serial.print("recall is ");
-  //loop all goOn to see which button is pressed
-  for (int i=0;i<4;i++){
-     //if goOn is not 0, meaning it's pressed
-     if (!goOn[i]){
-       //Serial.print(i);
-       //Serial.println(" actually is pressed");
-       
-       //loop all recall spots and find the next available
-       for (int j=0;j<4;j++){
-         //if recall[j] is 0, meaning it's open
-         if (!recall[j] && !foundOpenSpot){
-           nextOpenIndex = j;
-           foundOpenSpot = true;
-         }
-       }
-       if (foundOpenSpot){
-           //log the button number to recall
-           recall[nextOpenIndex] = i+1;
-           //Serial.print(" should play ");
-           //Serial.println(recall[nextOpenIndex]);
-           
-           //playRecall(recall[nextOpenIndex]);
-           goOn[i] = false;
-           //since logged the button number, reset nextOpenSpot and foundOpenSpot
-           nextOpenIndex = 4;
-           foundOpenSpot=false;
-         }
-     }
-  }
-  Serial.print("\n");
-}
 
 void playRecall(int i){
+  Serial.print("log button number ");
   if (i==1){
-    Serial.print(i);
+    analogWrite(leds[i-1], 1024);
+    makeTweet();
+    //delay(500);
+    analogWrite(leds[i-1],0);
+    Serial.println(i);
   } else if (i==2){
-    Serial.print(i);
-    analogWrite(LED_2, 1024);
-    //startPlayback(cat, sizeof(cat));
-    delay(600);
-    analogWrite(LED_2,0);
+    Serial.println(i);
+    analogWrite(leds[i-1], 1024);
+    startPlayback(cat, sizeof(cat));
+    delay(500);
+    analogWrite(leds[i-1],0);
   } else if (i==3){
-    Serial.print(i);
+    Serial.println(i);
+    analogWrite(leds[i-1], 1024);
+    delay(500);
+    analogWrite(leds[i-1],0);
   } else if (i==4){
-    Serial.print(i);
+    Serial.println(i);
+    analogWrite(leds[i-1], 1024);
+    delay(500);
+    analogWrite(leds[i-1],0);
+  } else {
+    Serial.print("nothing");
+    Serial.println("\n");
+  }
+}
+
+
+void makeTweet(){
+  int counter = random(2,6);
+  int angulo = random(10, 50);
+  highChirp(5,angulo/10);
+  delay(100);
+  lowChirp(angulo*4,2);
+  delay(100);
+}
+
+void highChirp(int intensity, int chirpsNumber){
+  int i;
+  int x;
+
+  //for(int repeat=0; repeat<=chirpsNumber; repeat++){
+
+  for (i=100; i>0; i--)
+  {
+    for  (x=0; x<intensity;  x++)
+    {
+      digitalWrite (SPEAKER,HIGH);
+      delayMicroseconds (i);
+      digitalWrite (SPEAKER,LOW);
+      delayMicroseconds (i);
+    }
+  }
+  //}
+}
+
+
+void lowChirp(int intensity, int chirpsNumber){
+  int i;
+  int x;
+  for(int veces=0; veces<=chirpsNumber; veces++){
+    for (i=0; i<200; i++)
+    {
+      digitalWrite (SPEAKER,HIGH);
+      delayMicroseconds(i);
+      digitalWrite(SPEAKER,LOW);
+      delayMicroseconds(i);
+    }
+    for (i=90; i>80; i--)
+    {
+      for  ( x=0; x<5;  x++)
+      {
+        digitalWrite (SPEAKER,HIGH);
+        delayMicroseconds (i);
+        digitalWrite (SPEAKER,LOW);
+        delayMicroseconds (i);
+      }
+    }
   }
 }
 
