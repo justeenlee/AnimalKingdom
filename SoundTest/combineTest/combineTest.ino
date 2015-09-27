@@ -1,7 +1,7 @@
 /*
   random sound + deounce
-  working prototype 0917 with prints
-  
+  working prototype 0927 with prints
+  a copy of 0917combine
 
 */
 
@@ -10,7 +10,7 @@
 #define SPEAKER 11
 
 int buttons[] = {4,5,6,7,2};
-int leds[] = {A0,A1,A2,A3};
+int leds[] = {A0,A1,A2,A3,A4}; //0927 test: add ? light
 
 boolean wasPressed[5] = {false,false,false,false,false};
 int whichButtonWasPressed = 100;
@@ -90,13 +90,18 @@ void getPattern(){
     pattern[i] = j;
    if (i!=3){
       if (pattern[i]!=1){
+        analogWrite(leds[4], 1024);//0927 test: add ? light
         playPattern(pattern[i]);
         delay(700); //0927 test: 1000 to 700 for shorter break
       } else {
+        analogWrite(leds[4], 1024);//0927 test: add ? light
         playPattern(pattern[i]);
+        delay(700);//0927 test: add ? light
       }
     } else {
+      analogWrite(leds[4], 1024); //0927 test: add ? light
       playPattern(pattern[i]);
+      delay(700);//0927 test: add ? light
     }
   }
   Serial.print("\n");
