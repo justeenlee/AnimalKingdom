@@ -9,7 +9,7 @@
 
 #define SPEAKER 11
 
-int buttons[] = {4,5,6,7,2};
+int buttons[] = {2,10,4,9,13}; 
 int leds[] = {A0,A1,A2,A3,A4}; //0927 test: add ? light
 
 boolean wasPressed[5] = {false,false,false,false,false};
@@ -48,6 +48,11 @@ void setup() {
   pinMode(buttons[2], INPUT);
   pinMode(buttons[3], INPUT);
   pinMode(buttons[4], INPUT);
+//  pinMode(leds[0], OUTPUT);
+//  pinMode(leds[1], OUTPUT);
+//  pinMode(leds[2], OUTPUT);
+//  pinMode(leds[3], OUTPUT);
+//  pinMode(leds[4], OUTPUT);
   Serial.begin(9600);
 }
 
@@ -88,21 +93,15 @@ void getPattern(){
   for (int i = 0; i<4; i++){
     int j = random(1,5);
     pattern[i] = j;
-   if (i!=3){
-      if (pattern[i]!=1){
-        analogWrite(leds[4], 1024);//0927 test: add ? light
-        playPattern(pattern[i]);
-        delay(700); //0927 test: 1000 to 700 for shorter break
-      } else {
-        analogWrite(leds[4], 1024);//0927 test: add ? light
-        playPattern(pattern[i]);
-        delay(700);//0927 test: add ? light
-      }
-    } else {
-      analogWrite(leds[4], 1024); //0927 test: add ? light
+    analogWrite(leds[0], 1024);//0927 test: add ? light
+    if (pattern[i]!=1){
       playPattern(pattern[i]);
-      delay(700);//0927 test: add ? light
+      delay(700); //0927 test: 1000 to 700 for shorter break
+    } else {
+      playPattern(pattern[i]);
     }
+    analogWrite(leds[0], 0); //0927 test: add ? light(turn off)
+    delay(250);
   }
   Serial.print("\n");
   inMatchMode = true;
@@ -190,29 +189,29 @@ void getRecall(){
 void playRecall(int i){
   Serial.print("log button number ");
   if (i==1){
-    analogWrite(leds[i-1], 1024);
+    analogWrite(leds[4], 1024);
     makeTweet();
     //delay(500);
-    analogWrite(leds[i-1],0);
+    analogWrite(leds[4],0);
     Serial.println(i);
   } else if (i==2){
     Serial.println(i);
-    analogWrite(leds[i-1], 1024);
+    analogWrite(leds[1], 1024);
     startPlayback(cat, sizeof(cat));
     delay(600);
-    analogWrite(leds[i-1],0);
+    analogWrite(leds[1],0);
   } else if (i==3){
     Serial.println(i);
-    analogWrite(leds[i-1], 1024);
+    analogWrite(leds[3], 1024);
     startPlayback(goat, sizeof(goat));
     delay(600);
-    analogWrite(leds[i-1],0);
+    analogWrite(leds[3],0);
   } else if (i==4){
     Serial.println(i);
-    analogWrite(leds[i-1], 1024);
+    analogWrite(leds[2], 1024);
     startPlayback(cow, sizeof(cow));
     delay(600);
-    analogWrite(leds[i-1],0);
+    analogWrite(leds[2],0);
   } else {
     Serial.print("nothing");
     Serial.println("\n");
